@@ -23,6 +23,7 @@ class Simulator{
 	void transformCoordinatesToroidal(Point*);
 	bool hasCollision();
 	bool hasCollisionSingle(Point*);
+	void saveCoordsToFile();
 };
 
 #endif

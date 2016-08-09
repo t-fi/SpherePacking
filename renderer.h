@@ -13,6 +13,7 @@ class Renderer{
 	
 	Renderer();	
 	void createPlot(std::vector<Point>, double);
+	void createImage(std::vector<Point>, double);
 	void createVideo();
 };
 

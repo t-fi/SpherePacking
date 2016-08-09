@@ -1,6 +1,8 @@
 #include "simulator.h"
 
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 
 Simulator::Simulator(int numPoints, double _radius){
 	radius = _radius;
@@ -45,6 +47,16 @@ bool Simulator::hasCollision(){
 		}
 	}
 	return false;
+}
+
+void Simulator::saveCoordsToFile(){
+	std::ofstream myfile;
+	myfile.open ("coordinates.dat", std::ios::trunc);
+	myfile << "#Phi\tTheta\tx\ty\tz\n";
+	for(auto &point: points){
+		myfile << std::fixed << std::setprecision(5) << point.sph.phi<< "\t" << point.sph.theta << "\t" << point.cart.x << "\t" << point.cart.y << "\t" << point.cart.z << "\n";
+	}
+	myfile.close();
 }
 
 bool Simulator::hasCollisionSingle(Point * refPoint){
