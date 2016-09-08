@@ -3,12 +3,14 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <sstream>
 
 Simulator::Simulator(int numPoints, double _radius){
 	radius = _radius;
 
 	mt_rand.seed(0);
 	uniformDist = std::uniform_real_distribution<double>(0.,6.28318530718);
+	intDist = std::uniform_int_distribution<int>(0,numPoints-1);
 
 	for(int i = 0; i < numPoints; i++){
 		points.emplace_back(uniformDist(mt_rand), uniformDist(mt_rand));
@@ -20,24 +22,40 @@ Simulator::Simulator(int numPoints, double _radius){
 	uniformDist = std::uniform_real_distribution<double>(0.,1.);	
 }
 
-void Simulator::movePoints(double d){
+void Simulator::movePoint(double d){
 	double dPhi, dTheta;
+
+	int rand = intDist(mt_rand);
+
+	double oPhi = points[rand].sph.phi;
+	double oTheta = points[rand].sph.theta;
+
+
+	dPhi = d*(.5-uniformDist(mt_rand));
+	dTheta = d*(.5-uniformDist(mt_rand));
+	points[rand].move(dPhi,dTheta);
+	
+	if(!hasCollisionSingle(&points[rand])){
+		//std::cout << "probability: " << std::abs(sin(points[rand].sph.theta)) << std::endl; 
+		if(std::abs(sin(points[rand].sph.theta))>uniformDist(mt_rand))
+
+		//std::cout << "probability: " << probability() << std::endl; 
+		//if(probability()>uniformDist(mt_rand))
+			return;
+	}	
+	points[rand].sph.phi = oPhi;
+	points[rand].sph.theta = oTheta;
+	points[rand].transformCoordinates();
+}
+
+//yields way probability ~e-15
+double Simulator::probability(){
+	double output=1.;
+	
 	for(auto &point: points){
-		int tries = 1000000;
-
-		double oPhi = point.sph.phi;
-		double oTheta = point.sph.theta;
-		do{	
-			point.sph.phi = oPhi;
-			point.sph.theta = oTheta;
-
-			if(tries--==0) break;
-
-			dPhi = d*(.5-uniformDist(mt_rand));
-			dTheta = d*(.5-uniformDist(mt_rand));
-			point.move(dPhi,dTheta);
-		} while (hasCollisionSingle(&point));
+		output*=std::abs(sin(point.sph.theta));
 	}
+	return output;
 }
 
 bool Simulator::hasCollision(){
@@ -49,12 +67,32 @@ bool Simulator::hasCollision(){
 	return false;
 }
 
-void Simulator::saveCoordsToFile(){
+void Simulator::saveCoordsToFile(int i){
+	std::stringstream ss;
+	ss << std::setw(6) << std::setfill('0') << i;	
+	
 	std::ofstream myfile;
-	myfile.open ("coordinates.dat", std::ios::trunc);
-	myfile << "#Phi\tTheta\tx\ty\tz\n";
+	myfile.open ("data/coordinates"+ss.str()+".dat", std::ios::trunc);
+	myfile << "#Phi\tTheta\tx\ty\tz\tr\n";
 	for(auto &point: points){
-		myfile << std::fixed << std::setprecision(5) << point.sph.phi<< "\t" << point.sph.theta << "\t" << point.cart.x << "\t" << point.cart.y << "\t" << point.cart.z << "\n";
+		myfile << std::fixed << std::setprecision(5) << point.sph.phi<< "\t" << point.sph.theta << "\t" << point.cart.x << "\t" << point.cart.y << "\t" << point.cart.z << "\t" << radius << "\n";
+	}
+	myfile.close();
+}
+
+void Simulator::saveCoordsToFileOpengl(int i){
+	std::stringstream ss;
+	ss << std::setw(6) << std::setfill('0') << i;	
+	
+	std::ofstream myfile;
+	myfile.open ("data/coordinates"+ss.str()+".dat", std::ios::trunc);
+	
+	myfile << points.size() << std::endl;
+	myfile << "-2 2" << std::endl;
+	myfile << "-2 2" << std::endl;
+	myfile << "-2 2" << std::endl;
+	for(auto &point: points){
+		myfile << std::fixed << std::setprecision(7) << point.cart.x << " " << point.cart.y << " " << point.cart.z << " " << 2*radius << "\n";
 	}
 	myfile.close();
 }

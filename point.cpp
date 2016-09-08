@@ -33,19 +33,11 @@ void Point::transformCoordinates(){
 	cart.z = cos(sph.phi);
 #endif
 #ifdef sphere
-	double sinPhi = sin(sph.phi);
+	double sinTheta = sin(sph.theta);
 	
-	cart.x = sinPhi*cos(sph.theta);
-	cart.y = sinPhi*sin(sph.theta);
-	cart.z = cos(sph.phi);
+	cart.x = sinTheta*cos(sph.phi);
+	cart.y = sinTheta*sin(sph.phi);
+	cart.z = cos(sph.theta);
 #endif
 }
 
-/*
-void TorusPoint::transformCoordinates(){
-	double sinPhi = 3+sin(sph.phi);
-	
-	cart.x = sinPhi*cos(sph.theta);
-	cart.y = sinPhi*sin(sph.theta);
-	cart.z = cos(sph.phi);
-}*/

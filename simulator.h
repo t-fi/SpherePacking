@@ -11,6 +11,7 @@ class Simulator{
 
 	std::mt19937_64 mt_rand;
 	std::uniform_real_distribution<double> uniformDist;
+	std::uniform_int_distribution<int> intDist;
 	
 	std::vector<Point> points;
 	double radius;
@@ -18,12 +19,14 @@ class Simulator{
 	void (Simulator::*transformCoordinates)(Point*);
 	
 	Simulator(int, double);
-	void movePoints(double);
+	void movePoint(double);
 	void transformCoordinatesSpherical(Point*);
 	void transformCoordinatesToroidal(Point*);
 	bool hasCollision();
 	bool hasCollisionSingle(Point*);
-	void saveCoordsToFile();
+	void saveCoordsToFile(int);
+	void saveCoordsToFileOpengl(int);
+	double probability();
 };
 
 #endif

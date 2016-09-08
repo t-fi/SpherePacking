@@ -34,7 +34,7 @@ void Renderer::createImage(std::vector<Point> points, double radius){
 #endif
 		"set isosamples 20,20",
 		"unset key",
-		//"set output 'plot\\image-%0d'," + std::to_string(numImages) + ")"
+		//"set output 'plot\\image%05d'," + std::to_string(numImages) + ")"
 	};
 
 	FILE * gnuplotPipe = popen("gnuplot -p", "w");
@@ -43,8 +43,8 @@ void Renderer::createImage(std::vector<Point> points, double radius){
 		fprintf(gnuplotPipe, "%s \n", command);
 	}
 	
-	//printf("set output 'plot\\image-%05d'\n",numImages);
-	fprintf(gnuplotPipe, "set output 'plot/image-%05d'\n",numImages);
+	//printf("set output 'plot\\image%05d'\n",numImages);
+	fprintf(gnuplotPipe, "set output 'plot/image%05d.png'\n",numImages);
 
 	char * dummy = "";
 
@@ -96,5 +96,5 @@ void Renderer::createPlot(std::vector<Point> points, double radius){
 }
 
 void Renderer::createVideo(){
-	//TODO: create more plots, save them as picture and then create video via ffmpeg
+	system("ffmpeg -y -framerate 60 -i plot/image%05d.png -c:v libx264 -vf ""fps=60,format=yuv420p"" plot/out.mp4");
 }
