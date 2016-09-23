@@ -26,11 +26,11 @@ bool Point::collidesWith(Point * point, double radius){
 
 void Point::transformCoordinates(){
 #ifdef torus
-	double sinPhi = 3 + sin(sph.phi);
+	double cosTheta = 2 + cos(sph.theta);
 	
-	cart.x = sinPhi*cos(sph.theta);
-	cart.y = sinPhi*sin(sph.theta);
-	cart.z = cos(sph.phi);
+	cart.x = cosTheta*cos(sph.phi);
+	cart.y = cosTheta*sin(sph.phi);
+	cart.z = sin(sph.theta);
 #endif
 #ifdef sphere
 	double sinTheta = sin(sph.theta);

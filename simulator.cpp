@@ -36,11 +36,13 @@ void Simulator::movePoint(double d){
 	points[rand].move(dPhi,dTheta);
 	
 	if(!hasCollisionSingle(&points[rand])){
-		//std::cout << "probability: " << std::abs(sin(points[rand].sph.theta)) << std::endl; 
-		if(std::abs(sin(points[rand].sph.theta))>uniformDist(mt_rand))
-
-		//std::cout << "probability: " << probability() << std::endl; 
-		//if(probability()>uniformDist(mt_rand))
+#ifdef sphere
+		double probability = std::abs(sin(points[rand].sph.theta)/sin(oTheta));
+#endif
+#ifdef torus
+		double probability = std::abs((3+sin(points[rand].sph.theta))/(3+sin(oTheta)));
+#endif
+		if(probability>uniformDist(mt_rand))
 			return;
 	}	
 	points[rand].sph.phi = oPhi;
@@ -48,7 +50,7 @@ void Simulator::movePoint(double d){
 	points[rand].transformCoordinates();
 }
 
-//yields way probability ~e-15
+//yields way too low probability ~e-15
 double Simulator::probability(){
 	double output=1.;
 	

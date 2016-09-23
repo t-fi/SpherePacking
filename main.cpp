@@ -6,8 +6,12 @@ int main(int argc, char * argv[])
 {
 	int steps=1000000;
 	int numPoints=12;
+#ifdef sphere
 	double radiusIncrement=1./(double)steps;
-
+#endif
+#ifdef torus
+	double radiusIncrement=3./(double)steps;
+#endif
 	std::cout << "Arguments are:" << std::endl;
 	
 	for(int i=0; i<argc; i++){
@@ -24,12 +28,13 @@ int main(int argc, char * argv[])
 	std::cout << "points: " << numPoints << std::endl;
 	std::cout << "radInc: " << radiusIncrement << std::endl;
 
+	std::cout << "deleting data/*" << std::endl;
 	system("rm data/*");
 
 	Simulator simulator(numPoints,radiusIncrement);
                     //2147483647
 	for(int i=0; i<steps; i++){
-		if(i%(steps/1000)==0) simulator.saveCoordsToFileOpengl(i/(steps/1000));
+		if(i%(steps/1000)==0) simulator.saveCoordsToFile(i/(steps/1000));
 
 		simulator.movePoint(0.1);
 		simulator.radius += radiusIncrement;

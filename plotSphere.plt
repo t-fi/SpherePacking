@@ -26,4 +26,3 @@ do for [file in files] {
 	#splot file u 3:4:5 pt 7
 }
 
-system()
