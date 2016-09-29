@@ -8,8 +8,16 @@ Point::Point(double phi, double theta){
 	transformCoordinates();
 }
 void Point::move(double dPhi, double dTheta){
-	sph.phi+=dPhi;
-	sph.theta+=dTheta;
+	sph.phi += dPhi;
+	sph.theta += dTheta;
+
+	sph.phi = fmod(sph.phi,2*M_PI)+(sph.phi < 0)*2*M_PI;
+#ifdef torus
+	sph.theta = fmod(sph.theta,2*M_PI)+(sph.theta < 0)*2*M_PI;
+#endif
+#ifdef sphere
+	sph.theta = fmod(sph.theta,M_PI)+(sph.theta < 0)*M_PI;
+#endif
 	transformCoordinates();
 }
 

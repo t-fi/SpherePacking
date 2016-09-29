@@ -1,8 +1,8 @@
 set term pngcairo
 unset key
 
-set xrange [-5:15]
-set yrange [-5:15]
+set xrange [0:6.28318530718]
+set yrange [0:6.28318530718]
 
 set print "-"
 print "reading files!"
