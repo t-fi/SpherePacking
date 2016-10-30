@@ -12,6 +12,7 @@ int main(int argc, char * argv[])
 #ifdef torus
 	double radiusIncrement=3./(double)steps;
 #endif
+
 	std::cout << "Arguments are:" << std::endl;
 	
 	for(int i=0; i<argc; i++){
@@ -34,12 +35,13 @@ int main(int argc, char * argv[])
 	Simulator simulator(numPoints,radiusIncrement);
                     //2147483647
 	for(int i=0; i<steps; i++){
-		if(i%(steps/1000)==0) simulator.saveCoordsToFile(i/(steps/1000));
+		if(i%(steps/1000)==0) simulator.saveCoordsToFileOpengl(i/(steps/1000));
 
-		simulator.movePoint(0.1);
+		simulator.movePoint(0.01);
 		simulator.radius += radiusIncrement;
 		if(simulator.hasCollision()) simulator.radius -= radiusIncrement;
 	}
 
+	std::cout << "Final distance: " << 2*simulator.radius << std::endl;
 	return 0;
 }
