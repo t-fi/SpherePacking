@@ -3,6 +3,7 @@
 #include <iostream>
 #include <limits>
 #include <iomanip>
+#include <chrono>
 
 int main(int argc, char * argv[])
 {
@@ -15,6 +16,8 @@ int main(int argc, char * argv[])
 #ifdef torus
 	double radiusIncrement=3./(double)steps;
 #endif
+
+
 
 	//std::cout << "Arguments are:" << std::endl;
 	
@@ -36,16 +39,25 @@ int main(int argc, char * argv[])
 	//std::cout << "deleting data/*" << std::endl;
 	//system("rm data/*");
 
+	std::chrono::time_point<std::chrono::system_clock> start, end;
+	start = std::chrono::system_clock::now();
+	std::chrono::duration<double> elapsed_seconds;
+
 	Simulator simulator(numPoints,radiusIncrement);
                     //2147483647
 	for(int i=0; i<steps; i++){
-		if(i%(steps/1000)==0) std::cout << i << " " << std::fixed << std::setprecision(7) << 2*simulator.radius << std::endl;
+		if(i%(steps/1000)==0){
+			end = std::chrono::system_clock::now();
+			elapsed_seconds = end-start;
+			std::cout << elapsed_seconds.count() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << std::endl;
 			//simulator.saveCoordsToFileOpengl(i/(steps/1000));
+		}
 
 		simulator.movePoint(movingDistance);
 		simulator.increaseRadius(radiusIncrement);
 	}
 
+	
 	
 	return 0;
 }
