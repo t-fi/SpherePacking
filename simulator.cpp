@@ -11,6 +11,7 @@
 Simulator::Simulator(int numPoints, double lambda, double sigma, int seed){
 	radius = 0.0;
 
+	// initialize the randomizers
 	mt_rand.seed(seed);
 	expDist = std::exponential_distribution<double>(lambda);
 	normDist = std::normal_distribution<double>(0,sigma);

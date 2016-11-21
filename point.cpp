@@ -11,6 +11,9 @@ void Point::move(double dPhi, double dTheta){
 	sph.phi += dPhi;
 	sph.theta += dTheta;
 
+	//make sure point does not wander outside the usual coordinate space
+	//that wouldn't really matter though....
+
 	sph.phi = fmod(sph.phi,2*M_PI)+(sph.phi < 0)*2*M_PI;
 #ifdef torus
 	sph.theta = fmod(sph.theta,2*M_PI)+(sph.theta < 0)*2*M_PI;

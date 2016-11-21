@@ -46,28 +46,26 @@ int main(int argc, char * argv[])
 	std::cout << '#' << " sigma     = " << sigma     << std::endl;
 	std::cout << '#' << " seed      = " << seed      << std::endl;
 
-	//timekeeping
+	// timekeeping
 	std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 	std::chrono::duration<double> elapsed_seconds;
 
-	//starting simulator
+	// starting simulator
 	Simulator simulator(numPoints, lambda, sigma, seed);
 
-	//main loop
+	// main loop
 	for(int i=0; i<steps; i++){
 
-		//log every 1000th step
-		//if(i%(steps/1000)==0){
+		// log every 1000th step
+		if(i%(steps/1000)==0){
 			elapsed_seconds = std::chrono::system_clock::now()-start;
 			std::cout << elapsed_seconds.count() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << std::endl;
 			//simulator.saveCoordsToFileOpengl(i/(steps/1000));
-		//}
+		}
 
 		simulator.increaseRadius();
 		simulator.movePoint();
 	}
 
-	
-	
 	return 0;
 }
