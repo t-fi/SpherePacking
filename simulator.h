@@ -11,6 +11,8 @@ class Simulator{
 
 	std::mt19937_64 mt_rand;
 	std::uniform_real_distribution<double> uniformDist;
+	std::exponential_distribution<double> expDist;
+	std::normal_distribution<double> normDist;
 	std::uniform_int_distribution<int> intDist;
 	
 	std::vector<Point> points;
@@ -18,9 +20,9 @@ class Simulator{
 
 	void (Simulator::*transformCoordinates)(Point*);
 	
-	Simulator(int, double);
-	void movePoint(double);
-	void increaseRadius(double);
+	Simulator(int, double, double, int);
+	void movePoint();
+	void increaseRadius();
 	void transformCoordinatesSpherical(Point*);
 	void transformCoordinatesToroidal(Point*);
 	bool hasCollision();

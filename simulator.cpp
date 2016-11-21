@@ -4,25 +4,30 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <cmath>
 
-Simulator::Simulator(int numPoints, double _radius){
-	radius = _radius;
+#define PI 3.14159265359
 
-	mt_rand.seed(0);
-	uniformDist = std::uniform_real_distribution<double>(0.,6.28318530718);
+Simulator::Simulator(int numPoints, double lambda, double sigma, int seed){
+	radius = 0.0;
+
+	mt_rand.seed(seed);
+	expDist = std::exponential_distribution<double>(lambda);
+	normDist = std::normal_distribution<double>(0,sigma);
+	uniformDist = std::uniform_real_distribution<double>(0.,1.);
 	intDist = std::uniform_int_distribution<int>(0,numPoints-1);
 
 	for(int i = 0; i < numPoints; i++){
-		points.emplace_back(uniformDist(mt_rand), uniformDist(mt_rand));
-		while(hasCollisionSingle(&points.back())){
-			points.back() = Point(uniformDist(mt_rand), uniformDist(mt_rand));
-		}
-	}
-	
-	uniformDist = std::uniform_real_distribution<double>(0.,1.);	
+#ifdef sphere
+		points.emplace_back(2*PI*uniformDist(mt_rand), acos(2*uniformDist(mt_rand)-1));
+#endif
+#ifdef torus
+		//http://math.stackexchange.com/questions/2017079/uniform-random-points-on-a-torus
+#endif
+	}	
 }
 
-void Simulator::movePoint(double d){
+void Simulator::movePoint(){
 	double dPhi, dTheta;
 
 	int rand = intDist(mt_rand);
@@ -31,8 +36,8 @@ void Simulator::movePoint(double d){
 	double oTheta = points[rand].sph.theta;
 
 
-	dPhi = d*(.5-uniformDist(mt_rand));
-	dTheta = d*(.5-uniformDist(mt_rand));
+	dPhi = normDist(mt_rand);
+	dTheta = normDist(mt_rand);
 	points[rand].move(dPhi,dTheta);
 	
 	if(!hasCollisionSingle(&points[rand])){
@@ -50,9 +55,9 @@ void Simulator::movePoint(double d){
 	points[rand].transformCoordinates();
 }
 
-void Simulator::increaseRadius(double d){
+void Simulator::increaseRadius(){
 	double oldRadius = radius;
-	radius += d*uniformDist(mt_rand);
+	radius += expDist(mt_rand);
 	if(this->hasCollision()) radius = oldRadius;
 }
 
