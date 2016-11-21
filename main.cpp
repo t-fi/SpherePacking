@@ -43,8 +43,7 @@ int main(int argc, char * argv[])
 			//simulator.saveCoordsToFileOpengl(i/(steps/1000));
 
 		simulator.movePoint(movingDistance);
-		simulator.radius += radiusIncrement;
-		if(simulator.hasCollision()) simulator.radius -= radiusIncrement;
+		simulator.increaseRadius(radiusIncrement);
 	}
 
 	

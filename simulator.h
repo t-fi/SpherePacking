@@ -20,13 +20,13 @@ class Simulator{
 	
 	Simulator(int, double);
 	void movePoint(double);
+	void increaseRadius(double);
 	void transformCoordinatesSpherical(Point*);
 	void transformCoordinatesToroidal(Point*);
 	bool hasCollision();
 	bool hasCollisionSingle(Point*);
 	void saveCoordsToFile(int);
 	void saveCoordsToFileOpengl(int);
-	double probability();
 };
 
 #endif

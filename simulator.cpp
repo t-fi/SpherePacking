@@ -50,15 +50,12 @@ void Simulator::movePoint(double d){
 	points[rand].transformCoordinates();
 }
 
-//yields way too low probability ~e-15
-double Simulator::probability(){
-	double output=1.;
-	
-	for(auto &point: points){
-		output*=std::abs(sin(point.sph.theta));
-	}
-	return output;
+void Simulator::increaseRadius(double d){
+	double oldRadius = radius;
+	radius += d*uniformDist(mt_rand);
+	if(this->hasCollision()) radius = oldRadius;
 }
+
 
 bool Simulator::hasCollision(){
 	for(int i = 0; i < points.size(); i++){
