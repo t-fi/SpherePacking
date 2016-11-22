@@ -24,8 +24,8 @@ int main(int argc, char * argv[])
 	for(int i=5; i>=argc; i--){
 		if(i==1) numPoints = 12;
 		if(i==2) steps     = 1000000;
-		if(i==3) lambda    = 1e-6;
-		if(i==4) sigma     = 0.01;
+		if(i==3) lambda    = 1.;
+		if(i==4) sigma     = 1.;
 		if(i==5) seed      = 0;
 	}
 
@@ -57,11 +57,11 @@ int main(int argc, char * argv[])
 	for(int i=0; i<steps; i++){
 
 		// log every 1000th step
-		if(i%(steps/1000)==0){
+		/*if(i%(steps/1000)==0){
 			elapsed_seconds = std::chrono::system_clock::now()-start;
 			std::cout << elapsed_seconds.count() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << std::endl;
 			//simulator.saveCoordsToFileOpengl(i/(steps/1000));
-		}
+		}*/
 
 		simulator.increaseRadius();
 		simulator.movePoint();

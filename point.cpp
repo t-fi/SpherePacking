@@ -1,6 +1,7 @@
 #include "point.h"
 
 #include <math.h>
+#include <cmath>
 
 Point::Point(double phi, double theta){
 	sph.phi = phi;
@@ -25,14 +26,19 @@ void Point::move(double dPhi, double dTheta){
 }
 
 bool Point::collidesWith(Point * point, double radius){
+
+	double diameter = 2*radius;
 	if(point==this) return false;
 
 	double dx = cart.x - point->cart.x;
+	if(std::abs(dx)>diameter) return false;
 	double dy = cart.y - point->cart.y;
+	if(std::abs(dy)>diameter) return false;
 	double dz = cart.z - point->cart.z;
+	if(std::abs(dz)>diameter) return false;
 	double d = sqrt(dx*dx+dy*dy+dz*dz);
 
-	return d<2*radius;
+	return d<diameter;
 }
 
 void Point::transformCoordinates(){
