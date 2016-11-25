@@ -25,7 +25,7 @@ Simulator::Simulator(int numPoints, double lambda, double sigma, int seed){
 #ifdef torus
 		//http://math.stackexchange.com/questions/2017079/uniform-random-points-on-a-torus
 #endif
-	}	
+	}
 }
 
 void Simulator::movePoint(){
@@ -46,7 +46,7 @@ void Simulator::movePoint(){
 		double probability = std::abs(sin(points[rand].sph.theta)/sin(oTheta));
 #endif
 #ifdef torus
-		double probability = std::abs((3+sin(points[rand].sph.theta))/(3+sin(oTheta)));
+		double probability = std::abs((3+cos(points[rand].sph.theta))/(3+cos(oTheta)));
 #endif
 		if(probability>uniformDist(mt_rand))
 			return;
@@ -107,4 +107,16 @@ bool Simulator::hasCollisionSingle(Point * refPoint){
 		if(point.collidesWith(refPoint, radius)) return true;
 	}
 	return false;
+}
+
+double Simulator::packingDensity(){
+#ifdef sphere
+	double totalArea = 4*PI;
+#endif
+#ifdef torus
+	double totalArea = 2*PI*PI*3;
+#endif
+	double particleArea = radius*radius*PI*points.size();
+	return particleArea/totalArea;
+
 }

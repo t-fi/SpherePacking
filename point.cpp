@@ -43,7 +43,7 @@ bool Point::collidesWith(Point * point, double radius){
 
 void Point::transformCoordinates(){
 #ifdef torus
-	double cosTheta = 2 + cos(sph.theta);
+	double cosTheta = 3 + cos(sph.theta);
 	
 	cart.x = cosTheta*cos(sph.phi);
 	cart.y = cosTheta*sin(sph.phi);

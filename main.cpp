@@ -59,7 +59,7 @@ int main(int argc, char * argv[])
 		// log every 1000th step
 		if(i%(steps/1000)==0){
 			elapsed_seconds = std::chrono::system_clock::now()-start;
-			std::cout << elapsed_seconds.count() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << std::endl;
+			std::cout << elapsed_seconds.count() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << "\n";
 			//simulator.saveCoordsToFileOpengl(i/(steps/1000));
 		}
 
@@ -67,6 +67,7 @@ int main(int argc, char * argv[])
 		simulator.movePoint();
 	}
 
-	//std::cout << simulator.radius;
+
+	std::cerr << std::fixed << std::setprecision(19) << simulator.packingDensity() << std::endl;
 	return 0;
 }

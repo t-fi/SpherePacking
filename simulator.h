@@ -29,6 +29,7 @@ class Simulator{
 	bool hasCollisionSingle(Point*);
 	void saveCoordsToFile(int);
 	void saveCoordsToFileOpengl(int);
+	double packingDensity();
 };
 
 #endif

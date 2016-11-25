@@ -1,6 +1,6 @@
 reset
 
-unset key
+#unset key
 
 set xlabel ""
 
@@ -12,4 +12,4 @@ set logscale x
 
 #set xrange [1:]
 
-plot for [i=0:7] sprintf("data/%d.dat",i) u 2:(1.414214-$3) w lines
+plot for [j=1:10] for [i=1:10] sprintf("data/%d_%d.dat",i,j) u 2:(1.414214-$3) w l lc 1 t sprintf("params %d",j)

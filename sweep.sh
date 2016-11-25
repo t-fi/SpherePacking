@@ -1,12 +1,14 @@
 #!/bin/bash
 
 rm data/*.dat
-
-for i in {1..7}
+for j in {1..10}
 do
-   nohup nice -n 1 ./packSphere 6 1000000000 1 1 $i > data/$i.dat 2> /dev/null &
+	for i in {1..10}
+	do
+		nohup nice -n 1 ./packSphere 6 10000000 $((j * 0.2)) $((2 / j)) $i > data/${i}_${j}.dat 2> /dev/null &
+	done
 done
 
-time nice -n 2 ./packSphere 6 1000000000 1 1 0 > data/0.dat
+time nice -n 2 ./packSphere 6 10000000 1 1 0 > data/0_0.dat
 
 exit
