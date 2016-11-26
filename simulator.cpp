@@ -24,6 +24,12 @@ Simulator::Simulator(int numPoints, double lambda, double sigma, int seed){
 #endif
 #ifdef torus
 		//http://math.stackexchange.com/questions/2017079/uniform-random-points-on-a-torus
+		double theta = 2*PI*uniformDist(mt_rand);
+		double phi = 2*PI*uniformDist(mt_rand);
+		if(3+cos(theta)/4>=uniformDist(mt_rand))
+			points.emplace_back(theta, phi);
+		else
+			i--;
 #endif
 	}
 }
@@ -40,7 +46,7 @@ void Simulator::movePoint(){
 	dPhi = normDist(mt_rand);
 	dTheta = normDist(mt_rand);
 	points[rand].move(dPhi,dTheta);
-	
+
 	if(!hasCollisionSingle(&points[rand])){
 #ifdef sphere
 		double probability = std::abs(sin(points[rand].sph.theta)/sin(oTheta));
@@ -50,7 +56,7 @@ void Simulator::movePoint(){
 #endif
 		if(probability>uniformDist(mt_rand))
 			return;
-	}	
+	}
 	points[rand].sph.phi = oPhi;
 	points[rand].sph.theta = oTheta;
 	points[rand].transformCoordinates();
@@ -74,8 +80,8 @@ bool Simulator::hasCollision(){
 
 void Simulator::saveCoordsToFile(int i){
 	std::stringstream ss;
-	ss << std::setw(6) << std::setfill('0') << i;	
-	
+	ss << std::setw(6) << std::setfill('0') << i;
+
 	std::ofstream myfile;
 	myfile.open ("data/coordinates"+ss.str()+".dat", std::ios::trunc);
 	myfile << "#Phi\tTheta\tx\ty\tz\tr\n";
@@ -87,15 +93,23 @@ void Simulator::saveCoordsToFile(int i){
 
 void Simulator::saveCoordsToFileOpengl(int i){
 	std::stringstream ss;
-	ss << std::setw(6) << std::setfill('0') << i;	
-	
+	ss << std::setw(6) << std::setfill('0') << i;
+
 	std::ofstream myfile;
 	myfile.open ("data/coordinates"+ss.str()+".dat", std::ios::trunc);
-	
+
 	myfile << points.size() << std::endl;
-	myfile << "-2 2" << std::endl;
-	myfile << "-2 2" << std::endl;
-	myfile << "-2 2" << std::endl;
+	#ifdef sphere
+		myfile << "-2 2" << std::endl;
+		myfile << "-2 2" << std::endl;
+		myfile << "-2 2" << std::endl;
+	#endif
+	#ifdef torus
+			myfile << "-4 4" << std::endl;
+			myfile << "-4 4" << std::endl;
+			myfile << "-4 4" << std::endl;
+	#endif
+
 	for(auto &point: points){
 		myfile << std::fixed << std::setprecision(7) << point.cart.x << " " << point.cart.y << " " << point.cart.z << " " << 2*radius << "\n";
 	}
@@ -114,7 +128,7 @@ double Simulator::packingDensity(){
 	double totalArea = 4*PI;
 #endif
 #ifdef torus
-	double totalArea = 2*PI*PI*3;
+	double totalArea = 4*PI*PI*3;
 #endif
 	double particleArea = radius*radius*PI*points.size();
 	return particleArea/totalArea;
