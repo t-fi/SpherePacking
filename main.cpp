@@ -32,7 +32,7 @@ int main(int argc, char * argv[])
 	// error handling
 	if(numPoints <= 0  ||
 	   steps     <= 0  ||
-           lambda    <= 0. ||
+     lambda    <= 0. ||
 	   sigma     <= 0.)
 	{
 		std::cout << "An argument was invalid! Program terminated." << std::endl;

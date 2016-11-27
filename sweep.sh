@@ -1,11 +1,9 @@
 #!/bin/bash
 
-for j in {1..10}
+for j in {3..100}
 do
-	for i in {1..3}
-	do
-		nohup ./packSphere ${j} 10000000 1 1 $i > data/${i}_${j}.dat 2> data/results.dat &
-	done
+		nohup ./packSphere ${j} 100000000 1 1 $1 > data/sphere_${i}_$1.dat 2>> data/resultsSphere.dat &
+		nohup ./packTorus ${j} 100000000 1 1 $1 > data/torus_${i}_$1.dat 2>> data/resultsTorus.dat &
 done
 
 exit

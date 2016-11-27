@@ -14,12 +14,13 @@ class Simulator{
 	std::exponential_distribution<double> expDist;
 	std::normal_distribution<double> normDist;
 	std::uniform_int_distribution<int> intDist;
-	
+
 	std::vector<Point> points;
 	double radius;
+	int seed;
 
 	void (Simulator::*transformCoordinates)(Point*);
-	
+
 	Simulator(int, double, double, int);
 	void movePoint();
 	void increaseRadius();
@@ -33,4 +34,3 @@ class Simulator{
 };
 
 #endif
-

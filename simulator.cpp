@@ -8,8 +8,9 @@
 
 #define PI 3.14159265359
 
-Simulator::Simulator(int numPoints, double lambda, double sigma, int seed){
+Simulator::Simulator(int numPoints, double lambda, double sigma, int _seed){
 	radius = 0.0;
+	seed = _seed;
 
 	// initialize the randomizers
 	mt_rand.seed(seed);
@@ -93,7 +94,12 @@ void Simulator::saveCoordsToFile(int i){
 
 void Simulator::saveCoordsToFileOpengl(int i){
 	std::stringstream ss;
-	ss << std::setw(6) << std::setfill('0') << i;
+	#ifdef sphere
+	    ss << "_sphere_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
+	#endif
+	#ifdef torus
+	    ss << "_torus_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
+	#endif
 
 	std::ofstream myfile;
 	myfile.open ("data/coordinates"+ss.str()+".dat", std::ios::trunc);
