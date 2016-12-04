@@ -8,13 +8,14 @@
 int main(int argc, char * argv[])
 {
 	// argument parsing
-	int steps, numPoints, seed;
+	int numPoints, seed;
+	long int steps;
 	double lambda, sigma;
 
 	// reading arguments
 	for(int i=0; i<argc; i++){
 		if(i==1) numPoints = atoi(argv[i]);
-		if(i==2) steps     = atoi(argv[i]);
+		if(i==2) steps     = atol(argv[i]);
 		if(i==3) lambda    = atof(argv[i]);
 		if(i==4) sigma     = atof(argv[i]);
 		if(i==5) seed      = atof(argv[i]);
@@ -54,7 +55,7 @@ int main(int argc, char * argv[])
 	Simulator simulator(numPoints, lambda, sigma, seed);
 
 	// main loop
-	for(int i=0; i<steps; i++){
+	for(long int i=0; i<steps; i++){
 
 		// log every 1000th step
 		if(i%(steps/1000)==0){
