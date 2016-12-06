@@ -11,13 +11,14 @@ struct Coord2D{
 
 class Point{
 	public:
-	
+
 	Coord3D cart;
 	Coord2D sph;
-	
+
 	Point(double, double);
 	void move(double, double);
 	bool collidesWith(Point*, double);
+	double getDistance(Point*);
 	void transformCoordinates();
 };
 #endif

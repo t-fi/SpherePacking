@@ -117,7 +117,32 @@ void Simulator::saveCoordsToFileOpengl(int i){
 	#endif
 
 	for(auto &point: points){
-		myfile << std::fixed << std::setprecision(7) << point.cart.x << " " << point.cart.y << " " << point.cart.z << " " << 2*radius << "\n";
+		myfile << std::fixed << std::setprecision(7) << point.cart.x << " " << point.cart.y << " " << point.cart.z
+		<< " " << 2*radius << " " << countNeighbours(&point) << "\n";
+	}
+	myfile.close();
+}
+
+void Simulator::saveCoordsToFileQhull(int i){
+	std::stringstream ss;
+	#ifdef sphere
+	    ss << "_sphere_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
+	#endif
+	#ifdef torus
+	    ss << "_torus_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
+	#endif
+
+	std::ofstream myfile;
+	myfile.open ("data/hull"+ss.str()+".dat", std::ios::trunc);
+
+  myfile << 3 << std::endl;
+
+	//add artificial point at 0
+	myfile << points.size()+1 << std::endl;
+  myfile << std::fixed << std::setprecision(7) << 0.0 << " " << 0.0 << " " << 0.0 << "\n";
+
+	for(auto &point: points){
+		myfile << std::fixed << std::setprecision(7) << point.cart.x << " " << point.cart.y << " " << point.cart.z << "\n";
 	}
 	myfile.close();
 }
@@ -127,6 +152,18 @@ bool Simulator::hasCollisionSingle(Point * refPoint){
 		if(point.collidesWith(refPoint, radius)) return true;
 	}
 	return false;
+}
+
+//dummy
+int Simulator::countNeighbours(Point * refPoint){
+	int counter = -1; //distance to self is 0
+
+	double epsilon = 2 * radius * 1.000001;
+
+	for(auto &point: points){
+		if(point.getDistance(refPoint) < epsilon) counter++;
+	}
+	return counter;
 }
 
 double Simulator::packingDensity(){

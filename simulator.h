@@ -26,10 +26,12 @@ class Simulator{
 	void increaseRadius();
 	void transformCoordinatesSpherical(Point*);
 	void transformCoordinatesToroidal(Point*);
+	int countNeighbours(Point*);
 	bool hasCollision();
 	bool hasCollisionSingle(Point*);
 	void saveCoordsToFile(int);
 	void saveCoordsToFileOpengl(int);
+	void saveCoordsToFileQhull(int);
 	double packingDensity();
 };
 
