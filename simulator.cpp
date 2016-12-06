@@ -137,7 +137,7 @@ void Simulator::saveCoordsToFileQhull(int i){
 
   myfile << 3 << std::endl;
 
-	//add artificial point at 0
+	//add artificial point at 0; torus needs more additional points or a different method
 	myfile << points.size()+1 << std::endl;
   myfile << std::fixed << std::setprecision(7) << 0.0 << " " << 0.0 << " " << 0.0 << "\n";
 
