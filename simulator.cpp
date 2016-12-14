@@ -135,7 +135,7 @@ void Simulator::saveCoordsToFileQhull(int i){
 	std::ofstream myfile;
 	myfile.open ("data/hull"+ss.str()+".dat", std::ios::trunc);
 
-  myfile << 3 << std::endl;
+  myfile << 3 << "Diameter=" << 2*radius << std::endl;
 
 	//add artificial point at 0; torus needs more additional points or a different method
 	myfile << points.size()+1 << std::endl;
