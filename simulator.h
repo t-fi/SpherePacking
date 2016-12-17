@@ -33,6 +33,7 @@ class Simulator{
 	void saveCoordsToFileOpengl(int);
 	void saveCoordsToFileQhull(int);
 	double packingDensity();
+	double MCpackingDensity();
 };
 
 #endif

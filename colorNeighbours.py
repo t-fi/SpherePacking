@@ -12,7 +12,7 @@ def is_valid_file(parser, arg):
         return open(arg, 'r')  # return an open file handle
 
 def createOGlFile(numParticles, coordinates, radius):
-    file = open('outfile.dat', 'w+')
+    file = open('ColouredData/outfile_%d.dat'%(numParticles), 'w+')
     file.write("%d%s" % (numParticles,"\n"))
     file.write("-2 2\n")
     file.write("-2 2\n")
@@ -38,7 +38,7 @@ def colorNeighbours(file):
     voronoiData = out.split('\n')
     for count in range(numParticles):
         #last line is empty, hence the -1
-        coordinates.append((lines[len(lines)-count-1].strip('\n'),voronoiData[-2-count][0]))
+        coordinates.append((lines[len(lines)-count-1].strip('\n'),int(voronoiData[-2-count][0])-2))
     file.close
     createOGlFile(numParticles,coordinates,radius)
 

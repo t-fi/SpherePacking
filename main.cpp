@@ -70,5 +70,6 @@ int main(int argc, char * argv[])
   simulator.saveCoordsToFileQhull(0);
 
 	std::cerr << numPoints << " " << std::fixed << std::setprecision(19) << simulator.packingDensity() << std::endl;
+	std::cerr << numPoints << " " << std::fixed << std::setprecision(19) << simulator.MCpackingDensity() << std::endl;
 	return 0;
 }

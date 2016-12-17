@@ -177,3 +177,37 @@ double Simulator::packingDensity(){
 	return particleArea/totalArea;
 
 }
+
+double Simulator::MCpackingDensity(){
+
+	long totalSamples = 100000000;
+	long particleSamples = 0;
+
+	for(long i = 0; i < totalSamples; i++){
+
+		#ifdef sphere
+			double phi = 2*PI*uniformDist(mt_rand);
+			double theta = acos(2*uniformDist(mt_rand)-1);
+		#endif
+		#ifdef torus
+			//http://math.stackexchange.com/questions/2017079/uniform-random-points-on-a-torus
+
+			double theta, phi = 2*PI*uniformDist(mt_rand);
+
+			do {
+				theta = 2*PI*uniformDist(mt_rand);
+			} while(3+cos(theta)/4<uniformDist(mt_rand));
+
+		#endif
+			Point * samplePoint = new Point(phi,theta);
+
+		for(auto &point: points){
+			if(point.collidesWith(samplePoint, radius/2)){
+				particleSamples++; break;
+			}
+		}
+	}
+
+	return (double)particleSamples/(double)totalSamples;
+
+}
