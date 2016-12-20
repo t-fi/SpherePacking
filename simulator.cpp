@@ -199,7 +199,7 @@ double Simulator::MCpackingDensity(){
 			} while(3+cos(theta)/4<uniformDist(mt_rand));
 
 		#endif
-			Point * samplePoint = new Point(phi,theta);
+		Point * samplePoint = new Point(phi,theta);
 
 		for(auto &point: points){
 			if(point.collidesWith(samplePoint, radius/2)){
