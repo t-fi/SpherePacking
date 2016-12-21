@@ -35,7 +35,7 @@ Simulator::Simulator(int numPoints, double lambda, double sigma, int _seed){
 	}
 }
 
-void Simulator::movePoint(){
+bool Simulator::movePoint(){
 	double dPhi, dTheta;
 
 	int rand = intDist(mt_rand);
@@ -56,17 +56,22 @@ void Simulator::movePoint(){
 		double probability = std::abs((3+cos(points[rand].sph.theta))/(3+cos(oTheta)));
 #endif
 		if(probability>uniformDist(mt_rand))
-			return;
+			return true;
 	}
 	points[rand].sph.phi = oPhi;
 	points[rand].sph.theta = oTheta;
 	points[rand].transformCoordinates();
+	return false;
 }
 
-void Simulator::increaseRadius(){
+bool Simulator::increaseRadius(){
 	double oldRadius = radius;
 	radius += expDist(mt_rand);
-	if(this->hasCollision()) radius = oldRadius;
+	if(this->hasCollision()){
+		radius = oldRadius;
+		return false;
+	}
+	return true;
 }
 
 
@@ -118,6 +123,37 @@ void Simulator::saveCoordsToFileOpengl(int i){
 
 	for(auto &point: points){
 		myfile << std::fixed << std::setprecision(7) << point.cart.x << " " << point.cart.y << " " << point.cart.z
+		<< " " << 2*radius << "\n";
+	}
+	myfile.close();
+}
+
+void Simulator::saveCoordsToFileOpenglColourTouch(int i){
+	std::stringstream ss;
+	#ifdef sphere
+	    ss << "_sphere_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
+	#endif
+	#ifdef torus
+	    ss << "_torus_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
+	#endif
+
+	std::ofstream myfile;
+	myfile.open ("data/colourCoordinates"+ss.str()+".dat", std::ios::trunc);
+
+	myfile << points.size() << std::endl;
+	#ifdef sphere
+		myfile << "-2 2" << std::endl;
+		myfile << "-2 2" << std::endl;
+		myfile << "-2 2" << std::endl;
+	#endif
+	#ifdef torus
+			myfile << "-4 4" << std::endl;
+			myfile << "-4 4" << std::endl;
+			myfile << "-4 4" << std::endl;
+	#endif
+
+	for(auto &point: points){
+		myfile << std::fixed << std::setprecision(7) << point.cart.x << " " << point.cart.y << " " << point.cart.z
 		<< " " << 2*radius << " " << countNeighbours(&point) << "\n";
 	}
 	myfile.close();
@@ -154,11 +190,10 @@ bool Simulator::hasCollisionSingle(Point * refPoint){
 	return false;
 }
 
-//dummy
 int Simulator::countNeighbours(Point * refPoint){
 	int counter = -1; //distance to self is 0
 
-	double epsilon = 2 * radius * 1.000001;
+	double epsilon = 2.01 * radius;
 
 	for(auto &point: points){
 		if(point.getDistance(refPoint) < epsilon) counter++;
@@ -166,7 +201,7 @@ int Simulator::countNeighbours(Point * refPoint){
 	return counter;
 }
 
-double Simulator::packingDensity(){
+double Simulator::discPackingDensity(){
 #ifdef sphere
 	double totalArea = 4*PI;
 #endif
@@ -180,7 +215,7 @@ double Simulator::packingDensity(){
 
 double Simulator::MCpackingDensity(){
 
-	long totalSamples = 100000000;
+	long totalSamples = 10000000;
 	long particleSamples = 0;
 
 	for(long i = 0; i < totalSamples; i++){
@@ -209,5 +244,17 @@ double Simulator::MCpackingDensity(){
 	}
 
 	return (double)particleSamples/(double)totalSamples;
+}
 
+void Simulator::printReport(){
+	double mcDensity = MCpackingDensity();
+
+	std::cerr << points.size() << " simple disc packing density: " << std::fixed << std::setprecision(19) << discPackingDensity() << std::endl;
+	std::cerr << points.size() << " MC packing density:          " << std::fixed << std::setprecision(19) << mcDensity << std::endl;
+	#ifdef sphere
+		double exactPackingDensity = points.size()*2*PI*(1-radius*radius)*(1-sqrt(1-radius*radius))/(4*PI*(1-radius*radius));
+		std::cerr << std::fixed << std::setprecision(19) << "Packing density with correction factor: " << exactPackingDensity << std::endl;
+	#endif
+
+	std::cerr << std::fixed << std::setprecision(19) << "Final Radius for " << points.size() << " Particles: " << radius << " Diameter: " << 2*radius << std::endl;
 }

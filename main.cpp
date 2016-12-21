@@ -57,33 +57,35 @@ int main(int argc, char * argv[])
 	// starting simulator
 	Simulator simulator(numPoints, lambda, sigma, seed);
 
+	//succes rate (SR) counters
+	double percSRradius = 0.0;
+	double percSRposition = 0.0;
+	long int SRradius = 0;
+	long int SRposition = 0;
+	long int trials = 0;
+
 	// main loop
 	for(long int i=0; i<steps; i++){
 
 		// log every 1000th step
 		if(i%(steps/1000)==0){
+			percSRradius = (double)SRradius/(double)trials;
+			percSRposition = (double)SRposition/(double)trials;
+			trials = 0;
+			SRradius = 0;
+			SRposition = 0;
 			elapsed_seconds = std::chrono::system_clock::now()-start;
-			std::cout << elapsed_seconds.count() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << std::endl;
+			std::cout << elapsed_seconds.count() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << " " << std::fixed << std::setprecision(19) << percSRradius << " " << percSRposition << std::endl;
 		}
 
-		simulator.increaseRadius();
-		simulator.movePoint();
+		trials++;
+		SRradius += simulator.increaseRadius();
+		SRposition += simulator.movePoint();
 	}
 
-  simulator.saveCoordsToFileQhull(0);
+  simulator.saveCoordsToFileOpenglColourTouch(0);
 
-	double mcDensity = simulator.MCpackingDensity();
-
-	elapsed_seconds = std::chrono::system_clock::now()-start;
-
-	std::cerr << numPoints << " simple disc packing density: " << std::fixed << std::setprecision(19) << simulator.packingDensity() << std::endl;
-	std::cerr << numPoints << " MC packing density:          " << std::fixed << std::setprecision(19) << mcDensity << std::endl;
-	#ifdef sphere
-		double exactPackingDensity = numPoints*2*PI*(1-simulator.radius*simulator.radius)*(1-sqrt(1-simulator.radius*simulator.radius))/(4*PI*(1-simulator.radius*simulator.radius));
-		std::cerr << std::fixed << std::setprecision(19) << "Packing density with correction factor:       " << exactPackingDensity << std::endl;
-	#endif
-
-	std::cerr << std::fixed << std::setprecision(19) << elapsed_seconds.count() << " Final Radius for " << numPoints << " Particles: " << simulator.radius << " Diameter: " << 2*simulator.radius << std::endl;
+	simulator.printReport();
 
 	return 0;
 }

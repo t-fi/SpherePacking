@@ -22,8 +22,8 @@ class Simulator{
 	void (Simulator::*transformCoordinates)(Point*);
 
 	Simulator(int, double, double, int);
-	void movePoint();
-	void increaseRadius();
+	bool movePoint();
+	bool increaseRadius();
 	void transformCoordinatesSpherical(Point*);
 	void transformCoordinatesToroidal(Point*);
 	int countNeighbours(Point*);
@@ -31,9 +31,11 @@ class Simulator{
 	bool hasCollisionSingle(Point*);
 	void saveCoordsToFile(int);
 	void saveCoordsToFileOpengl(int);
+	void saveCoordsToFileOpenglColourTouch(int);
 	void saveCoordsToFileQhull(int);
-	double packingDensity();
+	double discPackingDensity();
 	double MCpackingDensity();
+	void printReport();
 };
 
 #endif

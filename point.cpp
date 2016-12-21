@@ -36,9 +36,9 @@ bool Point::collidesWith(Point * point, double radius){
 	if(std::abs(dy)>diameter) return false;
 	double dz = cart.z - point->cart.z;
 	if(std::abs(dz)>diameter) return false;
-	double d = sqrt(dx*dx+dy*dy+dz*dz);
+	double d = dx*dx+dy*dy+dz*dz;
 
-	return d<diameter;
+	return d<diameter*diameter;
 }
 
 double Point::getDistance(Point * point){
