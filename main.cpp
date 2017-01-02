@@ -3,7 +3,6 @@
 #include <iostream>
 #include <limits>
 #include <iomanip>
-#include <chrono>
 #include <cmath>
 
 #define PI 3.14159265359
@@ -50,10 +49,6 @@ int main(int argc, char * argv[])
 	std::cout << '#' << " sigma     = " << sigma     << std::endl;
 	std::cout << '#' << " seed      = " << seed      << std::endl;
 
-	// timekeeping
-	std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
-	std::chrono::duration<double> elapsed_seconds;
-
 	// starting simulator
 	Simulator simulator(numPoints, lambda, sigma, seed);
 
@@ -74,8 +69,7 @@ int main(int argc, char * argv[])
 			trials = 0;
 			SRradius = 0;
 			SRposition = 0;
-			elapsed_seconds = std::chrono::system_clock::now()-start;
-			std::cout << elapsed_seconds.count() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << " " << std::fixed << std::setprecision(19) << percSRradius << " " << percSRposition << std::endl;
+			//std::cout << simulator.elapsedTime() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << " " << std::fixed << std::setprecision(10) << percSRradius << " " << percSRposition << std::endl;
 		}
 
 		trials++;
@@ -83,9 +77,7 @@ int main(int argc, char * argv[])
 		SRposition += simulator.movePoint();
 	}
 
-  simulator.saveCoordsToFileOpenglColourTouch(0);
 
-	simulator.printReport();
-
+	//simulator.printReport();
 	return 0;
 }

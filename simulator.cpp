@@ -11,6 +11,7 @@
 Simulator::Simulator(int numPoints, double lambda, double sigma, int _seed){
 	radius = 0.0;
 	seed = _seed;
+	startTime = std::chrono::system_clock::now();
 
 	// initialize the randomizers
 	mt_rand.seed(seed);
@@ -84,12 +85,10 @@ bool Simulator::hasCollision(){
 	return false;
 }
 
-void Simulator::saveCoordsToFile(int i){
-	std::stringstream ss;
-	ss << std::setw(6) << std::setfill('0') << i;
-
+void Simulator::saveCoordsToFile(std::string folderPath){
 	std::ofstream myfile;
-	myfile.open ("data/coordinates"+ss.str()+".dat", std::ios::trunc);
+	myfile.open (folderPath+"coordinatesRAW.dat", std::ios::trunc);
+
 	myfile << "#Phi\tTheta\tx\ty\tz\tr\n";
 	for(auto &point: points){
 		myfile << std::fixed << std::setprecision(5) << point.sph.phi<< "\t" << point.sph.theta << "\t" << point.cart.x << "\t" << point.cart.y << "\t" << point.cart.z << "\t" << radius << "\n";
@@ -97,17 +96,9 @@ void Simulator::saveCoordsToFile(int i){
 	myfile.close();
 }
 
-void Simulator::saveCoordsToFileOpengl(int i){
-	std::stringstream ss;
-	#ifdef sphere
-	    ss << "_sphere_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
-	#endif
-	#ifdef torus
-	    ss << "_torus_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
-	#endif
-
+void Simulator::saveCoordsToFileOpengl(std::string folderPath){
 	std::ofstream myfile;
-	myfile.open ("data/coordinates"+ss.str()+".dat", std::ios::trunc);
+	myfile.open (folderPath+"coordinatesOGL.dat", std::ios::trunc);
 
 	myfile << points.size() << std::endl;
 	#ifdef sphere
@@ -128,17 +119,9 @@ void Simulator::saveCoordsToFileOpengl(int i){
 	myfile.close();
 }
 
-void Simulator::saveCoordsToFileOpenglColourTouch(int i){
-	std::stringstream ss;
-	#ifdef sphere
-	    ss << "_sphere_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
-	#endif
-	#ifdef torus
-	    ss << "_torus_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
-	#endif
-
+void Simulator::saveCoordsToFileOpenglColourTouch(std::string folderPath){
 	std::ofstream myfile;
-	myfile.open ("data/colourCoordinates"+ss.str()+".dat", std::ios::trunc);
+	myfile.open (folderPath+"coordinatesOGLColor.dat", std::ios::trunc);
 
 	myfile << points.size() << std::endl;
 	#ifdef sphere
@@ -159,17 +142,9 @@ void Simulator::saveCoordsToFileOpenglColourTouch(int i){
 	myfile.close();
 }
 
-void Simulator::saveCoordsToFileQhull(int i){
-	std::stringstream ss;
-	#ifdef sphere
-	    ss << "_sphere_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
-	#endif
-	#ifdef torus
-	    ss << "_torus_" << points.size() << "_" << seed << "_" <<  std::setw(6) << std::setfill('0') << i;
-	#endif
-
+void Simulator::saveCoordsToFileQhull(std::string folderPath){
 	std::ofstream myfile;
-	myfile.open ("data/hull"+ss.str()+".dat", std::ios::trunc);
+	myfile.open (folderPath+"coordinatesQhull.dat", std::ios::trunc);
 
   myfile << 3 << "Diameter=" << 2*radius << std::endl;
 
@@ -180,6 +155,30 @@ void Simulator::saveCoordsToFileQhull(int i){
 	for(auto &point: points){
 		myfile << std::fixed << std::setprecision(7) << point.cart.x << " " << point.cart.y << " " << point.cart.z << "\n";
 	}
+	myfile.close();
+}
+
+void Simulator::saveObservablesToFile(std::string folderPath){
+	std::ofstream myfile;
+	myfile.open (folderPath+"Observables.dat", std::ios::trunc);
+
+	double exactPackingDensity = 0;
+
+	#ifdef sphere
+		exactPackingDensity = points.size()*2*PI*(1-radius*radius)*(1-sqrt(1-radius*radius))/(4*PI*(1-radius*radius));
+	#endif
+
+  myfile << std::fixed << std::setprecision(19) << "Radius=" << 2*radius << std::endl;
+	myfile << std::fixed << std::setprecision(19) << "discPackingDensity=" << discPackingDensity() << std::endl;
+	myfile << std::fixed << std::setprecision(19) << "exactPackingDensity=" << exactPackingDensity << std::endl;
+	myfile << std::fixed << std::setprecision(19) << "MCPackingDensity=" << MCpackingDensity(100000) << std::endl;
+	myfile.close();
+}
+
+void Simulator::saveTimestamp(std::string folderPath){
+	std::ofstream myfile;
+	myfile.open (folderPath+"timestamp", std::ios::trunc);
+	myfile << std::fixed << std::setprecision(19) << elapsedTime() << std::endl;
 	myfile.close();
 }
 
@@ -213,9 +212,8 @@ double Simulator::discPackingDensity(){
 
 }
 
-double Simulator::MCpackingDensity(){
+double Simulator::MCpackingDensity(long totalSamples){
 
-	long totalSamples = 10000000;
 	long particleSamples = 0;
 
 	for(long i = 0; i < totalSamples; i++){
@@ -247,7 +245,7 @@ double Simulator::MCpackingDensity(){
 }
 
 void Simulator::printReport(){
-	double mcDensity = MCpackingDensity();
+	double mcDensity = MCpackingDensity(10000000);
 
 	std::cerr << points.size() << " simple disc packing density: " << std::fixed << std::setprecision(19) << discPackingDensity() << std::endl;
 	std::cerr << points.size() << " MC packing density:          " << std::fixed << std::setprecision(19) << mcDensity << std::endl;
@@ -257,4 +255,26 @@ void Simulator::printReport(){
 	#endif
 
 	std::cerr << std::fixed << std::setprecision(19) << "Final Radius for " << points.size() << " Particles: " << radius << " Diameter: " << 2*radius << std::endl;
+}
+
+double Simulator::elapsedTime(){
+	elapsed_seconds = std::chrono::system_clock::now()-startTime;
+	return elapsed_seconds.count();
+}
+
+void Simulator::saveFiles(int i){
+	std::stringstream folderPathSS;
+	#ifdef sphere
+	    folderPathSS << "sphere/" << points.size() << "/seed:" << seed << "/iteration:" <<  std::setw(6) << std::setfill('0') << i;
+	#endif
+	#ifdef torus
+	    folderPathSS << "torus/" << points.size() << "/seed:" << seed << "/iteration:" <<  std::setw(6) << std::setfill('0') << i;
+	#endif
+
+	std::string folderPath = folderPathSS.str();
+
+	saveCoordsToFile(folderPath);
+	saveCoordsToFileOpengl(folderPath);
+	saveCoordsToFileOpenglColourTouch(folderPath);
+	saveCoordsToFileQhull(folderPath);
 }

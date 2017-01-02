@@ -1,9 +1,10 @@
 #!/bin/bash
-
-for j in {3..100}
+for seed in {0..100}
 do
-		nohup ./packSphere ${j} 100000000 50 0.02 $1 > data/sphere_${j}_$1.dat 2>> data/resultsSphere_$1.dat &
-		nohup ./packTorus ${j} 100000000 50 0.02 $1 > data/torus_${j}_$1.dat 2>> data/resultsTorus_$1.dat &
+	for pCount in {3..100}
+	do
+		nohup ./packSphere ${pCount} 100000 50 0.02 ${seed} > /dev/null 2>> data/resultsSphere.dat < /dev/null &
+		nohup ./packTorus ${pCount} 100000 50 0.02 ${seed} > /dev/null 2>> data/resultsTorus.dat < /dev/null &
+	done
 done
-
 exit

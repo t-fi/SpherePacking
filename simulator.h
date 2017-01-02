@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <random>
+#include <chrono>
 
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
@@ -14,6 +15,10 @@ class Simulator{
 	std::exponential_distribution<double> expDist;
 	std::normal_distribution<double> normDist;
 	std::uniform_int_distribution<int> intDist;
+
+	std::chrono::time_point<std::chrono::system_clock> startTime;
+	std::chrono::duration<double> elapsed_seconds;
+
 
 	std::vector<Point> points;
 	double radius;
@@ -29,12 +34,16 @@ class Simulator{
 	int countNeighbours(Point*);
 	bool hasCollision();
 	bool hasCollisionSingle(Point*);
-	void saveCoordsToFile(int);
-	void saveCoordsToFileOpengl(int);
-	void saveCoordsToFileOpenglColourTouch(int);
-	void saveCoordsToFileQhull(int);
+	void saveCoordsToFile(std::string);
+	void saveCoordsToFileOpengl(std::string);
+	void saveCoordsToFileOpenglColourTouch(std::string);
+	void saveCoordsToFileQhull(std::string);
+	void saveObservablesToFile(std::string);
+	void saveTimestamp(std::string);
+	void saveFiles(int);
 	double discPackingDensity();
-	double MCpackingDensity();
+	double MCpackingDensity(long);
+	double elapsedTime();
 	void printReport();
 };
 
