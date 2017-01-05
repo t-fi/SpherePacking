@@ -168,6 +168,14 @@ void Simulator::saveObservablesToFile(std::string folderPath){
 		exactPackingDensity = points.size()*2*PI*(1-radius*radius)*(1-sqrt(1-radius*radius))/(4*PI*(1-radius*radius));
 	#endif
 
+	#ifdef sphere
+		myfile << "type=sphere" << std::endl;
+	#endif
+	#ifdef torus
+		myfile << "type=torus" << std::endl;
+	#endif
+	myfile << std::fixed << std::setprecision(19) << "seed=" << seed << std::endl;
+	myfile << std::fixed << std::setprecision(19) << "numParticles=" << points.size() << std::endl;
   myfile << std::fixed << std::setprecision(19) << "Radius=" << 2*radius << std::endl;
 	myfile << std::fixed << std::setprecision(19) << "discPackingDensity=" << discPackingDensity() << std::endl;
 	myfile << std::fixed << std::setprecision(19) << "exactPackingDensity=" << exactPackingDensity << std::endl;
@@ -262,7 +270,7 @@ double Simulator::elapsedTime(){
 	return elapsed_seconds.count();
 }
 
-void Simulator::saveFiles(int i){
+void Simulator::saveFiles(long int i){
 	std::stringstream folderPathSS;
 	#ifdef sphere
 	    folderPathSS << "data/sphere/numParticles:" << points.size() << "/seed:" << seed << "/iteration:" <<  std::setw(10) << std::setfill('0') << i << "/";

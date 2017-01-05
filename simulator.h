@@ -40,7 +40,7 @@ class Simulator{
 	void saveCoordsToFileQhull(std::string);
 	void saveObservablesToFile(std::string);
 	void saveTimestamp(std::string);
-	void saveFiles(int);
+	void saveFiles(long int);
 	double discPackingDensity();
 	double MCpackingDensity(long);
 	double elapsedTime();
