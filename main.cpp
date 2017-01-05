@@ -69,7 +69,7 @@ int main(int argc, char * argv[])
 			trials = 0;
 			SRradius = 0;
 			SRposition = 0;
-			//std::cout << simulator.elapsedTime() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << " " << std::fixed << std::setprecision(10) << percSRradius << " " << percSRposition << std::endl;
+			std::cerr << simulator.elapsedTime() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << " " << std::fixed << std::setprecision(10) << percSRradius << " " << percSRposition << std::endl;
 		}
 
 		trials++;
@@ -77,7 +77,7 @@ int main(int argc, char * argv[])
 		SRposition += simulator.movePoint();
 	}
 
+	simulator.saveFiles(0);
 
-	//simulator.printReport();
 	return 0;
 }

@@ -177,7 +177,7 @@ void Simulator::saveObservablesToFile(std::string folderPath){
 
 void Simulator::saveTimestamp(std::string folderPath){
 	std::ofstream myfile;
-	myfile.open (folderPath+"timestamp", std::ios::trunc);
+	myfile.open (folderPath+"timestamp.dat", std::ios::trunc);
 	myfile << std::fixed << std::setprecision(19) << elapsedTime() << std::endl;
 	myfile.close();
 }
@@ -265,16 +265,24 @@ double Simulator::elapsedTime(){
 void Simulator::saveFiles(int i){
 	std::stringstream folderPathSS;
 	#ifdef sphere
-	    folderPathSS << "sphere/" << points.size() << "/seed:" << seed << "/iteration:" <<  std::setw(6) << std::setfill('0') << i;
+	    folderPathSS << "data/sphere/numParticles:" << points.size() << "/seed:" << seed << "/iteration:" <<  std::setw(10) << std::setfill('0') << i << "/";
 	#endif
 	#ifdef torus
-	    folderPathSS << "torus/" << points.size() << "/seed:" << seed << "/iteration:" <<  std::setw(6) << std::setfill('0') << i;
+	    folderPathSS << "data/torus/numParticles:" << points.size() << "/seed:" << seed << "/iteration:" <<  std::setw(10) << std::setfill('0') << i << "/";
 	#endif
 
 	std::string folderPath = folderPathSS.str();
+
+	std::stringstream mkdirSS;
+
+	mkdirSS << "mkdir -p " << folderPath;
+
+	int dummy = system(mkdirSS.str().c_str());
 
 	saveCoordsToFile(folderPath);
 	saveCoordsToFileOpengl(folderPath);
 	saveCoordsToFileOpenglColourTouch(folderPath);
 	saveCoordsToFileQhull(folderPath);
+	saveObservablesToFile(folderPath);
+	saveTimestamp(folderPath);
 }
