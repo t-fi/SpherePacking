@@ -12,8 +12,8 @@ def extract_data(lines):
 def save_data(data):
     f_torus = open("data/results_torus.dat", "w")
     f_sphere = open("data/results_sphere.dat", "w")
-    f_torus.write("#type\tseed\tnumParticles\tRadius\tdiscPackingDensity\texactPackingDensity\tMCPackingDensity")
-    f_sphere.write("#type\tseed\tnumParticles\tRadius\tdiscPackingDensity\texactPackingDensity\tMCPackingDensity")
+    f_torus.write("#type\tseed\tnumParticles\tRadius\tdiscPackingDensity\texactPackingDensity\tMCPackingDensity\n")
+    f_sphere.write("#type\tseed\tnumParticles\tRadius\tdiscPackingDensity\texactPackingDensity\tMCPackingDensity\n")
     for element in data:
         if element[0] == "torus":
             dummy = f_torus
@@ -32,8 +32,6 @@ for subdir, dirs, files in os.walk("./data"):
         file = open(filepath, "r")
         lines = [x.strip() for x in file.readlines()]
         if filename == "Observables.dat":
-            print("the file %s matches! first line is %s" % (filepath, lines[0]))
             data.append(extract_data(lines))
 
-print(data)
 save_data(data)

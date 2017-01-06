@@ -179,7 +179,7 @@ void Simulator::saveObservablesToFile(std::string folderPath){
   myfile << std::fixed << std::setprecision(19) << "Radius=" << 2*radius << std::endl;
 	myfile << std::fixed << std::setprecision(19) << "discPackingDensity=" << discPackingDensity() << std::endl;
 	myfile << std::fixed << std::setprecision(19) << "exactPackingDensity=" << exactPackingDensity << std::endl;
-	myfile << std::fixed << std::setprecision(19) << "MCPackingDensity=" << MCpackingDensity(100000) << std::endl;
+	myfile << std::fixed << std::setprecision(19) << "MCPackingDensity=" << MCpackingDensity(10000000) << std::endl;
 	myfile.close();
 }
 
