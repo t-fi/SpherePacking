@@ -70,6 +70,7 @@ int main(int argc, char * argv[])
 			SRradius = 0;
 			SRposition = 0;
 			std::cerr << simulator.elapsedTime() << " " << i << " " << std::fixed << std::setprecision(19) << 2*simulator.radius << " " << std::fixed << std::setprecision(10) << percSRradius << " " << percSRposition << std::endl;
+			//simulator.saveFiles(i);
 		}
 
 		trials++;

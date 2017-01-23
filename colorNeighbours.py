@@ -14,9 +14,9 @@ def is_valid_file(parser, arg):
 def createOGlFile(numParticles, coordinates, radius):
     file = open('ColouredData/outfile_%d.dat'%(numParticles), 'w+')
     file.write("%d%s" % (numParticles,"\n"))
-    file.write("-2 2\n")
-    file.write("-2 2\n")
-    file.write("-2 2\n")
+    file.write("-1.5 1.5\n")
+    file.write("-1.5 1.5\n")
+    file.write("-1.5 1.5\n")
     for coord in coordinates:
         file.write("%s %f %s\n" % (coord[0], radius, coord[1]))
 
