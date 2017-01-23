@@ -247,6 +247,7 @@ double Simulator::MCpackingDensity(long totalSamples){
 				particleSamples++; break;
 			}
 		}
+		delete samplePoint;
 	}
 
 	return (double)particleSamples/(double)totalSamples;
