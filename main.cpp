@@ -64,7 +64,7 @@ int main(int argc, char * argv[])
 
 		// log every 1000th step
 		if(i%(steps/1000)==0){
-			percSRradius = (double)SRradius/(double)trials;
+			percSRradius = (double)SRradius/(double)(trials*numPoints);
 			percSRposition = (double)SRposition/(double)trials;
 			trials = 0;
 			SRradius = 0;
@@ -74,7 +74,9 @@ int main(int argc, char * argv[])
 		}
 
 		trials++;
-		SRradius += simulator.increaseRadius();
+		for(long int j = 0; j<numPoints;j++){
+			SRradius += simulator.increaseRadius();
+		}
 		SRposition += simulator.movePoint();
 	}
 

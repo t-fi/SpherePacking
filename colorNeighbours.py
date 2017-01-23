@@ -12,7 +12,7 @@ def is_valid_file(parser, arg):
         return open(arg, 'r')  # return an open file handle
 
 def createOGlFile(numParticles, coordinates, radius):
-    file = open('ColouredData/outfile_%d.dat'%(numParticles), 'w+')
+    file = open('data/AnimatedPlot/BestConfigs/sphere_color/outfile_%d.dat'%(numParticles), 'w+')
     file.write("%d%s" % (numParticles,"\n"))
     file.write("-1.5 1.5\n")
     file.write("-1.5 1.5\n")
