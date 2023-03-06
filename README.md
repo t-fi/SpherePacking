@@ -13,7 +13,7 @@ Dense packing on manifolds like spheres are not trivial, since its euler charact
 
 Which is reproduced in simulation:
 
-![](defects_h265_slow.mp4)
+![](defects.gif)
 
 Other results are that platonic solids are very densely packed, and that the packing density only very slowly approaches the dense case. Even thousands of particles yield 5% lower packing densities than ideal. See also the [slides](slides.pdf) (with broken videos, sorry!):
 
